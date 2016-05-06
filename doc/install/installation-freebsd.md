@@ -99,6 +99,17 @@ The following steps must be done as superuser!
 
     # Update GitLab config file, follow the directions at top of file
     vi config/gitlab.yml
+    
+    # Make sure the gitlab.yml file contains a proper, symlink-free path for repos_path
+    # repos_path: /usr/home/git/repositories/
+    
+    # Make sure the gitlab-shell config.yml also contains a proper, symlink-free path for repos_path
+    # repos_path: "/usr/home/git/repositories"
+    vi /usr/local/share/gitlab-shell/config.yml
+    
+    # Double-check the passwd file and make sure the git user home directory is correct
+    # Instead of the default /usr/local/git you will need /home/git
+    vipw
 
     # Find number of cores
     sysctl hw.ncpu
@@ -152,10 +163,14 @@ Otherwise your secrets are exposed if one of your backups is compromised.
 
 Check if GitLab and its environment are configured correctly:
 
+    su - git
+    cd /usr/local/www/gitlab
     rake gitlab:env:info RAILS_ENV=production
 
 ### Compile Assets
 
+    su - git
+    cd /usr/local/www/gitlab
     rake assets:precompile RAILS_ENV=production
 
 ### Start Your GitLab Instance
